@@ -10,49 +10,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Clonar el repo
-      - name: Checkout repo
+      # 1️⃣ Clonar el repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Configurar Node.js
+      # 2️⃣ Instalar Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 3. Instalar dependencias
+      # 3️⃣ Instalar dependencias
       - name: Install dependencies
         run: npm ci
 
-      # 4. Compilar TypeScript
+      # 4️⃣ Compilar TypeScript
       - name: Build TypeScript
         run: npm run build
 
-      # 5. Verificar archivos compilados
-      - name: List workspace files
-        run: ls -la $GITHUB_WORKSPACE
-
-      # 6. Crear ZIP con dist y dependencias
+      # 5️⃣ Crear ZIP listo para Lambda
       - name: Create ZIP artifact
-        run: zip -r $GITHUB_WORKSPACE/customer.zip dist node_modules package.json
+        run: zip -r customer.zip dist node_modules package.json
 
-      # 7. Configurar credenciales AWS
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+      # 6️⃣ Subir a S3
+      - name: Upload ZIP to S3
+        run: aws s3 cp customer.zip s3://newbank-lambda-artifacts-dev/customer.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
 
-      # 8. Subir ZIP a S3
-      - name: Upload artifact to S3
-        run: aws s3 cp $GITHUB_WORKSPACE/customer.zip s3://newbank-lambda-artifacts-dev/customer.zip
-
-      # 9. Actualizar Lambda directamente desde S3
-      - name: Update Lambda function code
-        run: |
-          aws lambda update-function-code \
-            --function-name newbank-customer-dev \
-            --s3-bucket newbank-lambda-artifacts-dev \
-            --s3-key customer.zip \
-            --publish
+      # 7️⃣ (Opcional) Validar contenido
+      - name: List S3 bucket content
+        run: aws s3 ls s3://newbank-lambda-artifacts-dev/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
