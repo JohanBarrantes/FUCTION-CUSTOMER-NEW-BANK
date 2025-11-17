@@ -6,16 +6,16 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Clonar el repo
+      # 1️⃣ Clonar repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
       # 2️⃣ Instalar Node.js
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -33,17 +33,18 @@ jobs:
         run: zip -r customer.zip dist node_modules package.json
 
       # 6️⃣ Subir a S3
-      - name: Upload ZIP to S3
-        run: aws s3 cp customer.zip s3://newbank-lambda-artifacts-dev/customer.zip
+      - name: Upload to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-1
+          AWS_REGION: us-east-1
+        run: |
+          aws s3 cp customer.zip s3://newbank-lambda-artifacts-dev/customer.zip
 
-      # 7️⃣ (Opcional) Validar contenido
-      - name: List S3 bucket content
-        run: aws s3 ls s3://newbank-lambda-artifacts-dev/
+      # 7️⃣ (Opcional) Verificar archivo en S3
+      - name: List S3 bucket
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-1
+          AWS_REGION: us-east-1
+        run: aws s3 ls s3://newbank-lambda-artifacts-dev/
