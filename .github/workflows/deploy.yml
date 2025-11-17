@@ -32,19 +32,12 @@ jobs:
       - name: Create ZIP artifact
         run: zip -r customer.zip dist node_modules package.json
 
-      # 6️⃣ Subir a S3
+      - name: Verify ZIP
+        run: ls -la customer.zip
+
       - name: Upload to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
-        run: |
-          aws s3 cp customer.zip s3://newbank-lambda-artifacts-dev/customer.zip
-
-      # 7️⃣ (Opcional) Verificar archivo en S3
-      - name: List S3 bucket
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-        run: aws s3 ls s3://newbank-lambda-artifacts-dev/
+        run: aws s3 cp customer.zip s3://newbank-lambda-artifacts-dev/customer.zip
