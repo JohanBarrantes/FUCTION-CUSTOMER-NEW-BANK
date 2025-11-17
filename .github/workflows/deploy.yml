@@ -17,10 +17,8 @@ jobs:
           node-version: 18
 
       - run: npm ci
-        working-directory: function-customer
 
       - run: npm run deploy
-        working-directory: function-customer
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
