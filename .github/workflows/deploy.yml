@@ -26,7 +26,6 @@ jobs:
 
       - name: Create ZIP artifact
         run: |
-          cd function-customer
           zip -r ../customer.zip dist node_modules package.json
       - name: Upload artifact to S3
         run: |
