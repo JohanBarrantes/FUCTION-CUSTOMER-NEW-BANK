@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Clonar el repositorio
+      # 1. Clonar el repo
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -28,19 +28,31 @@ jobs:
       - name: Build TypeScript
         run: npm run build
 
-      # 5. Revisar archivos y generar ZIP
+      # 5. Verificar archivos compilados
       - name: List workspace files
         run: ls -la $GITHUB_WORKSPACE
 
+      # 6. Crear ZIP con dist y dependencias
       - name: Create ZIP artifact
-        run: |
-          echo "Working dir: $(pwd)"
-          zip -r $GITHUB_WORKSPACE/customer.zip dist node_modules package.json
+        run: zip -r $GITHUB_WORKSPACE/customer.zip dist node_modules package.json
 
-      # 6. Subir el ZIP a S3
+      # 7. Configurar credenciales AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # 8. Subir ZIP a S3
       - name: Upload artifact to S3
         run: aws s3 cp $GITHUB_WORKSPACE/customer.zip s3://newbank-lambda-artifacts-dev/customer.zip
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
+
+      # 9. Actualizar Lambda directamente desde S3
+      - name: Update Lambda function code
+        run: |
+          aws lambda update-function-code \
+            --function-name newbank-customer-dev \
+            --s3-bucket newbank-lambda-artifacts-dev \
+            --s3-key customer.zip \
+            --publish
