@@ -1,0 +1,22 @@
+{
+  "name": "customer-lambda",
+  "version": "1.0.0",
+  "main": "dist/handler.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "echo 'Handled by GitHub Actions'"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.540.0",
+    "@aws-sdk/lib-dynamodb": "^3.540.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.130",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/jsonwebtoken": "^9.0.2",
+    "typescript": "^5.6.2"
+  }
+}
