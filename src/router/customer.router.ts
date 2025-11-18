@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
 import { errorResponse } from "../utils/responses";
-import { loginController } from "../controllers/login.controller";
-import { registerController } from "../controllers/register.controller";
+import { loginController } from "../controllers/login.controller.ts";
+import { registerController } from "../controllers/register.controller.ts";
 
 export default async function router(event: APIGatewayProxyEvent) {
   const path = event.path;

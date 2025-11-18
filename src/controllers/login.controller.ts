@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { errorResponse, successResponse } from "../utils/responses";
-import customerService from "../services/customer.service";
+import customerService from "../services/customer.service.ts";
 
 export const loginController = async (event: APIGatewayProxyEvent) => {
   try {
