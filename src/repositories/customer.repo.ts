@@ -3,6 +3,7 @@ import {
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
+  QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import crypto from "crypto";
 const client = new DynamoDBClient({});
@@ -11,15 +12,21 @@ const doc = DynamoDBDocumentClient.from(client);
 const TABLE = process.env.CUSTOMER_TABLE || "newbank-customers-dev";
 
 class CustomerRepository {
-  async getByEmail(email: string) {
-    const cmd = new GetCommand({
-      TableName: TABLE,
-      Key: { email },
-    });
+async getByEmail(email: string) {
+  const cmd = new QueryCommand({
+    TableName: TABLE,
+    IndexName: "email-index",
+    KeyConditionExpression: "email = :email",
+    ExpressionAttributeValues: {
+      ":email": email,
+    },
+    Limit: 1,
+  });
 
-    const result = await doc.send(cmd);
-    return result.Item;
-  }
+  const result = await doc.send(cmd);
+  return result.Items?.[0] ?? null;
+}
+
 
 async create(user: { email: string; password: string }) {
   const newUser = {
