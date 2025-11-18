@@ -23,6 +23,7 @@ class CustomerService {
   }
 
   async register(payload: RegisterPayload) {
+    console.log("CutomerService.register")
     const exists = await customerRepo.getByEmail(payload.email);
     if (exists) {
       throw { statusCode: 400, message: "User already exists" };

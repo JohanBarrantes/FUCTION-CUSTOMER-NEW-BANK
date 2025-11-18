@@ -8,7 +8,7 @@ import crypto from "crypto";
 const client = new DynamoDBClient({});
 const doc = DynamoDBDocumentClient.from(client);
 
-const TABLE = process.env.CUSTOMER_TABLE || "customer-table";
+const TABLE = process.env.CUSTOMER_TABLE || "newbank-customers-dev";
 
 class CustomerRepository {
   async getByEmail(email: string) {
