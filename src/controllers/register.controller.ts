@@ -8,7 +8,7 @@ export const registerController = async (event: APIGatewayProxyEvent) => {
 
     const result = await customerService.register(body);
 
-    return successResponse(result);
+    return successResponse(200,result);
   } catch (error: any) {
     return errorResponse(error.statusCode || 400, error.message);
   }
