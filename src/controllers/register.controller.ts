@@ -1,15 +1,22 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
-import { errorResponse, successResponse } from "../utils/responses";
-import customerService from "../services/customer.service";
+import { errorResponse, successResponse } from "../utils/responses.js";
+import customerService from "../services/customer.service.js";
 
-export const registerController = async (event: APIGatewayProxyEvent) => {
+export const registerController = async (body: any) => {
   try {
-    const body = JSON.parse(event.body || "{}");
+    console.log("Login body:", body);
 
-    const result = await customerService.register(body);
+    const data = {
+      email: body.email,
+      password: body.password,
+      name: body.name,
+      phone: body.phone
+    };
 
-    return successResponse(200,result);
+    const result = await customerService.register(data);
+
+    return successResponse(200, result);
   } catch (error: any) {
-    return errorResponse(error.statusCode || 400, error.message);
+    console.error("Login error:", error);
+    return errorResponse(error.statusCode || 400, error.message || "Bad Request");
   }
 };
