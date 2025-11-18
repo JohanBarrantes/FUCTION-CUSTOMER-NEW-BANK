@@ -1,20 +1,38 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
+// src/router/customer.router.ts
+import { APIGatewayProxyEventV2, APIGatewayProxyResult } from "aws-lambda";
+import { successResponse, errorResponse } from "../utils/responses.js";
 
-import { errorResponse } from "../utils/responses";
-import { loginController } from "../controllers/login.controller";
-import { registerController } from "../controllers/register.controller";
+// Router para HTTP API v2
+const router = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+  console.log("Customer router event:", event);
 
-export default async function router(event: APIGatewayProxyEvent) {
-  const path = event.path;
-  const method = event.httpMethod;
+  // Verificar método y ruta
+  const method = event.requestContext.http.method;
+  const path = event.rawPath;
 
-  if (path.endsWith("/login") && method === "POST") {
-    return loginController(event);
+  if (method === "POST" && path === "/customer") {
+    if (!event.body) return errorResponse(400, "Missing body");
+
+    try {
+      const body = JSON.parse(event.body);
+      console.log("Parsed body:", body);
+
+      // Aquí iría tu lógica real, ejemplo:
+      const result = {
+        message: "Customer processed successfully",
+        customerId: body.customerId,
+        action: body.action,
+      };
+
+      return successResponse(200, result);
+    } catch (e) {
+      console.error("JSON parse error:", e);
+      return errorResponse(400, "Invalid JSON");
+    }
   }
 
-  if (path.endsWith("/register") && method === "POST") {
-    return registerController(event);
-  }
-
+  // Ruta no encontrada
   return errorResponse(404, "Route not found");
-}
+};
+
+export default router;

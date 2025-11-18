@@ -1,15 +1,14 @@
-export const successResponse = (data: any, statusCode = 200) => ({
+// src/utils/responses.ts
+import { APIGatewayProxyResult } from "aws-lambda";
+
+export const successResponse = (statusCode: number, body: any): APIGatewayProxyResult => ({
   statusCode,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(data),
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(body),
 });
 
-export const errorResponse = (statusCode: number, message: string) => ({
+export const errorResponse = (statusCode: number, message: string): APIGatewayProxyResult => ({
   statusCode,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ error: message }),
 });
