@@ -4,12 +4,15 @@ import customerService from "../services/customer.service.js";
 
 export const loginController = async (event: APIGatewayProxyEventV2) => {
   try {
-    // En HTTP API v2, event.body sigue siendo string | null
     const body = JSON.parse(event.body || "{}");
     console.log("Login body:", body);
-
-    const result = await customerService.login(body);
-
+        const data = {
+        email: body.email,
+        password: body.password,
+        name:body.name,
+        phone:body.phone
+      };
+    const result = await customerService.register(data);
     return successResponse(200,result);
   } catch (error: any) {
     console.error("Login error:", error);
