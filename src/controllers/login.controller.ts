@@ -13,8 +13,15 @@ export const loginController = async (event: APIGatewayProxyEventV2) => {
         phone:body.phone
       };
     const result = await customerService.register(data);
-    return successResponse(200,result);
-  } catch (error: any) {
+return {
+    statusCode:200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type,Authorization",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    },
+    body: result,
+  };  } catch (error: any) {
     console.error("Login error:", error);
     return errorResponse(error.statusCode || 400, error.message || "Bad Request");
   }

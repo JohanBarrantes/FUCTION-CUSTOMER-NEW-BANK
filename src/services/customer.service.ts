@@ -36,7 +36,7 @@ class CustomerService {
       password: hashed,
     });
 
-    return { userId: created.userId };
+    return { userId: created.customerId };
   }
 }
 
