@@ -19,7 +19,7 @@ class CustomerService {
 
     const token = signJWT({ userId: user.userId, email: user.email });
 
-    return { token };
+    return { data:{user:user.userId,token }};
   }
 
   async register(payload: RegisterPayload) {
