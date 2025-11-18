@@ -21,22 +21,24 @@ class CustomerRepository {
     return result.Item;
   }
 
-  async create(user: { email: string; password: string }) {
-    const newUser = {
-      ...user,
-      userId: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-    };
+async create(user: { email: string; password: string }) {
+  const newUser = {
+    customerId: crypto.randomUUID(),   // PK REAL
+    email: user.email,
+    password: user.password,
+    createdAt: new Date().toISOString(),
+  };
 
-    await doc.send(
-      new PutCommand({
-        TableName: TABLE,
-        Item: newUser,
-      })
-    );
+  await doc.send(
+    new PutCommand({
+      TableName: TABLE,
+      Item: newUser,
+    })
+  );
 
-    return newUser;
-  }
+  return newUser;
+}
+
 }
 
 export default new CustomerRepository();
