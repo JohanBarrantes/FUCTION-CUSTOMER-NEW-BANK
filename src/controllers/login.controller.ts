@@ -12,7 +12,7 @@ export const loginController = async (body: any) => {
       phone: body.phone
     };
 
-    const result = await customerService.register(data);
+    const result = await customerService.login(data);
 
     return successResponse(200, result);
   } catch (error: any) {

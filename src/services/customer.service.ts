@@ -1,6 +1,6 @@
-import customerRepo from "../repositories/customer.repo";
+import customerRepo from "../repositories/customer.repo.js";
 import { LoginPayload, RegisterPayload } from "../types/customer.types";
-import { signJWT } from "../utils/jwt";
+import { signJWT } from "../utils/jwt.js";
 import bcrypt from "bcryptjs";
 
 class CustomerService {
