@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import router from "./src/router/customer.router";
-import { errorResponse } from "./src/utils/responses";
+import router from "./router/customer.router";
+import { errorResponse } from "./utils/responses";
 
 export const handler = async (
   event: APIGatewayProxyEvent
