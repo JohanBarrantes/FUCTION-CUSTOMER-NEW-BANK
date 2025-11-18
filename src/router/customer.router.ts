@@ -13,19 +13,13 @@ const router = async (
   const method = event.requestContext.http.method;
   const path = event.rawPath;
 
-  if (method === "POST" && path === "/customer") {
+  if (method === "POST" && path === "/registrationUser") {
     if (!event.body) return errorResponse(400, "Missing body");
 
     try {
       const body = JSON.parse(event.body);
       console.log("Parsed body:", body);
-      const result = {
-        message: "Customer processed successfully",
-        customerId: body.customerId,
-        action: body.action,
-      };
-      loginController(event);
-      return successResponse(200, result);
+      return loginController(event);
     } catch (e) {
       console.error("JSON parse error:", e);
       return errorResponse(400, "Invalid JSON");
