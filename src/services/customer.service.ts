@@ -17,9 +17,9 @@ console.log("user",user)
       throw { statusCode: 401, message: "Invalid credentials" };
     }
 
-    const token = signJWT({ userId: user.userId, email: user.email });
+    const token = signJWT({ customerId: user.customerId, email: user.email });
 
-    return { data:{user:user.userId,token }};
+    return { data:{user:user.customerId,token }};
   }
 
   async register(payload: RegisterPayload) {
