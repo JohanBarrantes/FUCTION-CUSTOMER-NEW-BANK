@@ -7,7 +7,7 @@ class CustomerService {
 
   async login(payload: LoginPayload) {
     const user = await customerRepo.getByEmail(payload.email);
-
+console.log("user",user)
     if (!user) {
       throw { statusCode: 404, message: "User not found" };
     }
